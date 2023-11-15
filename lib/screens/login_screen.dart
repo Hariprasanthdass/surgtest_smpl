@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:surgtest_smpl/screens/dashboard_screen.dart';
 import 'package:surgtest_smpl/screens/register_screen.dart';
@@ -14,6 +17,34 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  var _enteredEmail = '';
+  var _enteredPassword = '';
+
+  void _login() async {
+    final baseUrl = Uri.parse('https://api.surgtest.com/v3/api_login');
+    final response = await http.post(
+      baseUrl,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(
+        {
+          'username': _enteredEmail,
+          'password': _enteredPassword,
+        },
+      ),
+    );
+    if (response.statusCode <= 201) {
+      final responceValue = json.decode(response.body);
+      final refreshToken = responceValue['token'];
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const DashboardScreen(),
+        ),
+      );
+      print(response.body);
+      print(refreshToken);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                         return null;
                       },
+                      onSaved: (value) {
+                        _enteredEmail = value!;
+                      },
                     ),
                     const SizedBox(
                       height: 40,
@@ -61,6 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                         return null;
                       },
+                      onSaved: (value) {
+                        _enteredPassword = value!;
+                      },
                     ),
                     Align(
                       alignment: Alignment.center,
@@ -69,7 +106,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: const Text(
                           'Forgot password?',
                           style: TextStyle(
-                              color: Color.fromARGB(255, 135, 93, 233)),
+                            color: Color.fromARGB(255, 135, 93, 233),
+                          ),
                         ),
                       ),
                     ),
@@ -85,11 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               const Color.fromARGB(255, 135, 93, 233),
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const DashboardScreen(),
-                            ),
-                          );
+                          _login;
                         },
                         child: const Text('Log In'),
                       ),

@@ -24,8 +24,7 @@ class GrandTestCard extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                   color: Colors.grey.shade400,
-                  offset: const Offset(1.0, 1.0),
-                  blurRadius: 8,
+                  blurRadius: 2.5,
                   spreadRadius: 0.2),
             ],
           ),

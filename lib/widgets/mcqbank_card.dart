@@ -25,8 +25,7 @@ class McqBankCard extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                   color: Colors.grey.shade400,
-                  offset: const Offset(4.0, 4.0),
-                  blurRadius: 15,
+                  blurRadius: 2.5,
                   spreadRadius: 1.0),
             ],
           ),
